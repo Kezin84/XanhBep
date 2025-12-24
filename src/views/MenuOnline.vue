@@ -852,6 +852,18 @@
 </transition>
 
 <div v-if="isMobile" class="mobile-bottom-bar">
+  <!-- HOME -->
+  <button
+    :class="{ active: activeMobilePanel === 'home' }"
+    @click="goHomeMobile"
+  >
+    <div class="btn-inner">
+      <div class="btn-scale">
+        <i class="ri-home-4-line"></i>
+        <span class="btn-label">Home</span>
+      </div>
+    </div>
+  </button>
   <!-- DANH MỤC -->
   <button
     :class="{ active: activeMobilePanel === 'category' }"
@@ -864,20 +876,6 @@
       </div>
     </div>
   </button>
-
-  <!-- LIÊN HỆ -->
-  <button
-    :class="{ active: activeMobilePanel === 'contact' }"
-    @click="openMobilePanel('contact')"
-  >
-    <div class="btn-inner">
-      <div class="btn-scale">
-        <i class="ri-customer-service-fill"></i>
-        <span class="btn-label">{{ $t('mobile.contact') }}</span>
-      </div>
-    </div>
-  </button>
-
   <!-- GIỎ HÀNG -->
   <button
     class="cart-btn"
@@ -903,6 +901,20 @@
       </div>
     </div>
   </button>
+  <!-- LIÊN HỆ -->
+  <button
+    :class="{ active: activeMobilePanel === 'contact' }"
+    @click="openMobilePanel('contact')"
+  >
+    <div class="btn-inner">
+      <div class="btn-scale">
+        <i class="ri-customer-service-fill"></i>
+        <span class="btn-label">{{ $t('mobile.contact') }}</span>
+      </div>
+    </div>
+  </button>
+
+
 
   <!-- GỬI ĐƠN -->
   <button
@@ -1876,6 +1888,24 @@ function addFromDetailSidebar() {
     closingDetailSidebar.value = false
     selectedItem.value = null
   }, 260) // khớp với CSS
+}
+function goHomeMobile() {
+  // reset filter + state về ban đầu
+  activeMobilePanel.value = 'home'
+  showCategoryModal.value = false
+  showContactModal.value = false
+  showCart.value = false
+  showExportModal.value = false
+
+  keyword.value = ''
+  priceSort.value = 'all'
+  currentCategory.value = 'Tất cả'
+  currentPage.value = 1
+
+  // scroll lên danh sách sản phẩm (dùng hàm cũ)
+  nextTick(() => {
+    scrollToTop()
+  })
 }
 
 </script>
@@ -4217,7 +4247,7 @@ font-size: 11px;
     max-width: 100% !important;
     padding-bottom: 90px; /* chừa chỗ bottom bar */
   }
-
+  
   /* =====================================================
      SIDEBAR LEFT – DANH MỤC / LIÊN HỆ (TỪ PHẢI)
   ===================================================== */
@@ -4292,7 +4322,7 @@ font-size: 11px;
     background: #ffffff;
 
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     align-items: center;
 
     border-top: 2px solid #22c55e;
@@ -4653,7 +4683,7 @@ font-size: 11px;
   background: #ffffff;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   align-items: center;
 
   border-top: 2px solid #22c55e;

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import MenuOnline from '@/views/MenuOnline.vue'
+<<<<<<< HEAD
 import MenuMobile from '@/views/MenuMobile.vue'
 import QRBanking from '@/views/QRBanking.vue'
 
@@ -14,6 +15,9 @@ import Khuyenmai from '@/views/Khuyenmai.vue'   // ✅ THÊM
 import OpenTime from '@/views/OpenTime.vue' 
 import ContactShop from '@/views/ContactShop.vue'   // ✅ THÊM
 import Login from '@/views/Login.vue'
+=======
+
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
 
 const SUPPORTED_LANGS = ['vi', 'en', 'zh-CN', 'fil']
 
@@ -46,6 +50,7 @@ const router = createRouter({
       },
     },
 
+<<<<<<< HEAD
     /* ======================
        PUBLIC – MOBILE
     ====================== */
@@ -128,6 +133,9 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       redirect: '/vi',
     },
+=======
+
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
   ],
 })
 router.beforeEach((to, from, next) => {

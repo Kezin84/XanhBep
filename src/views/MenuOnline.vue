@@ -1410,17 +1410,34 @@ const pages = computed(() => {
   const tp = totalPages.value
   const cp = currentPage.value
   const DOT = '...'
+<<<<<<< HEAD
   const WINDOW = 4   // số trang hiển thị liền nhau (desktop + mobile)
+=======
+  const WINDOW = 4 // số trang hiển thị liền nhau trên mobile
+
+  // Desktop → full
+  if (!isMobile.value) {
+    return Array.from({ length: tp }, (_, i) => i + 1)
+  }
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
 
   // Ít trang → show hết
   if (tp <= WINDOW + 1) {
     return Array.from({ length: tp }, (_, i) => i + 1)
   }
 
+<<<<<<< HEAD
   // ===== SLIDING WINDOW (CHUNG) =====
   let start = cp
   let end = cp + WINDOW - 1
 
+=======
+  // ===== SLIDING WINDOW =====
+  let start = cp
+  let end = cp + WINDOW - 1
+
+  // Không vượt quá trang cuối
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
   if (end >= tp) {
     end = tp
     start = Math.max(1, tp - WINDOW + 1)
@@ -1431,6 +1448,10 @@ const pages = computed(() => {
     range.push(i)
   }
 
+<<<<<<< HEAD
+=======
+  // Nếu chưa chạm cuối → thêm ...
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
   if (end < tp) {
     range.push(DOT, tp)
   }
@@ -1438,7 +1459,10 @@ const pages = computed(() => {
   return range
 })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
 const menuKey = computed(() => {
   return `${keyword.value}-${currentCategory.value}-${currentPage.value}`
 })
@@ -5973,6 +5997,7 @@ filter: saturate(1.15);
   opacity:.8;
   user-select:none;
 }
+<<<<<<< HEAD
 /* ===== IMAGE MODAL ===== */
 .image-modal {
   z-index: 3000; /* cao hơn modal chi tiết */
@@ -6777,4 +6802,6 @@ box-shadow: 0 4px 10px rgba(239, 243, 16, 0.45);
 
 
 </style>
+=======
+>>>>>>> c2af1ba9ff594d168000af6df966338be81c772a
 

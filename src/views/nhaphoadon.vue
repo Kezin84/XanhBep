@@ -1685,7 +1685,7 @@ const tiGia = ref(1)
 const donViTienTeCK = ref('VND')
 
 /* ================= CATALOG SẢN PHẨM ================= */
-const entryMode = ref('manual') // 'catalog' | 'manual'
+const entryMode = ref('catalog') // 'catalog' | 'manual'
 const addedSuccessManual = ref(false) // Trạng thái nút thêm thủ công
 const searchProduct = ref('')
 // PHẦN BỔ SUNG: CATALOG FILTERS

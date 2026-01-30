@@ -160,7 +160,7 @@
           <div class="orders-grid">
           <div
             v-for="(dh, index) in paginatedOrders"
-            :key="dh.Ma_hoa_don"
+            :key="`${filter.sort}-${index}-${dh.Ma_hoa_don}`"
             class="order-card"
             :class="[getStatusClass(getDonStatus(dh)), { selected: isSelected(dh) }]"
             @click="openDetail(dh)"
@@ -565,6 +565,7 @@ const scrollContainer = ref(null) // The element that is actually scrolling
 // Reset page when searching
 watch(searchText, () => { currentPage.value = 1 })
 
+
 // Scroll to top when page changes
 watch(currentPage, () => {
   const el = document.querySelector('.page-container')
@@ -591,6 +592,13 @@ const filter = ref({
   status: 'Đang xử lý',
   sort: 'upcoming'
 })
+
+// Reset page when filter changes
+watch(() => filter.value.sort, () => { currentPage.value = 1 })
+watch(() => filter.value.status, () => { currentPage.value = 1 })
+watch(() => filter.value.payment, () => { currentPage.value = 1 })
+watch(() => filter.value.fromDate, () => { currentPage.value = 1 })
+watch(() => filter.value.toDate, () => { currentPage.value = 1 })
 
 onMounted(async () => {
   tickTimer = setInterval(() => {

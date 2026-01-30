@@ -1352,12 +1352,13 @@ watch(filter, () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 .page-container,
 .page-container * {
   box-sizing: border-box;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
 
 .page-container {
   width: 100%;

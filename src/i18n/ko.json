@@ -49,13 +49,15 @@
   },
   "status": {
     "in_stock": "재고 있음",
-    "out_stock": "품절"
+    "out_stock": "품절",
+    "outOfStock": "품절"
   },
   "mobile": {
     "category": "카테고리",
     "contact": "문의",
     "cart": "장바구니",
-    "send": "주문 보내기"
+    "send": "주문 보내기",
+    "checkout": "결제하기"
   },
   "modal": {
     "chooseLang": "언어 선택",

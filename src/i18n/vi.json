@@ -49,13 +49,15 @@
   },
   "status": {
     "in_stock": "Còn hàng",
-    "out_stock": "Hết hàng"
+    "out_stock": "Hết hàng",
+    "outOfStock": "HẾT HÀNG"
   },
   "mobile": {
     "category": "Danh mục",
     "contact": "Liên hệ",
     "cart": "Giỏ hàng",
-    "send": "Gửi đơn"
+    "send": "Gửi đơn",
+    "checkout": "THANH TOÁN"
   },
   "modal": {
     "chooseLang": "CHOOSE YOUR LANGUAGE",

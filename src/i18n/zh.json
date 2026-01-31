@@ -49,13 +49,15 @@
   },
   "status": {
     "in_stock": "有货",
-    "out_stock": "缺货"
+    "out_stock": "缺货",
+    "outOfStock": "缺货"
   },
   "mobile": {
     "category": "分类",
     "contact": "联系",
     "cart": "购物车",
-    "send": "发送订单"
+    "send": "发送订单",
+    "checkout": "结账"
   },
   "modal": {
     "chooseLang": "选择语言",

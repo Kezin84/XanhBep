@@ -49,13 +49,15 @@
   },
   "status": {
     "in_stock": "In stock",
-    "out_stock": "Out of stock"
+    "out_stock": "Out of stock",
+    "outOfStock": "OUT OF STOCK"
   },
   "mobile": {
     "category": "Category",
     "contact": "Contact",
     "cart": "Cart",
-    "send": "Send order"
+    "send": "Send order",
+    "checkout": "CHECKOUT"
   },
   "modal": {
     "chooseLang": "CHOOSE YOUR LANGUAGE",

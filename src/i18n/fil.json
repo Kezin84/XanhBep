@@ -49,13 +49,15 @@
   },
   "status": {
     "in_stock": "May stock",
-    "out_stock": "Walang stock"
+    "out_stock": "Walang stock",
+    "outOfStock": "WALANG STOCK"
   },
   "mobile": {
     "category": "Kategorya",
     "contact": "Makipag-ugnayan",
     "cart": "Cart",
-    "send": "Ipadala"
+    "send": "Ipadala",
+    "checkout": "MAGBAYAD"
   },
   "modal": {
     "chooseLang": "PUMILI NG WIKA",

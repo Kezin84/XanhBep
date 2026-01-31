@@ -389,6 +389,9 @@
   <template v-if="addedMap[m.Ma_hang]">
     <i class="ri-checkbox-circle-fill"></i>
   </template>
+  <template v-else-if="m.Trang_thai === 'Hết hàng'">
+    {{ $t('status.outOfStock') }}
+  </template>
   <template v-else>
     {{ $t('menu.add') }}
   </template>
@@ -514,10 +517,10 @@
   <button
     class="detail-add-btn"
     type="button"
-    :disabled="selectedItem?.Trang_thai === 'H?t h…ng'"
+    :disabled="selectedItem?.Trang_thai === 'Hết hàng'"
     @click.stop="addFromDetailSidebar"
   >
-    {{ $t('menu.add') }}
+    {{ selectedItem?.Trang_thai === 'Hết hàng' ? $t('status.outOfStock') : $t('menu.add') }}
   </button>
 </div>
    <!-- ✅ ẢNH SẢN PHẨM (BỊ THIẾU) -->
@@ -652,6 +655,9 @@
     <template v-if="addedMap[selectedItem.Ma_hang]">
       <i class="ri-checkbox-circle-fill"></i>
     </template>
+    <template v-else-if="selectedItem.Trang_thai === 'Hết hàng'">
+      {{ $t('status.outOfStock') }}
+    </template>
     <template v-else>
       {{ $t('menu.add') }}
     </template>
@@ -664,7 +670,7 @@
 
     <!-- ========== SIDEBAR RIGHT – CART (7) ========== -->
     <aside class="sidebar-right" :class="{ collapsed: !showCart }">
- <button class="toggle-btn" @click="showCart = !showCart">
+ <button class="toggle-btn" @click="showCart ? closeCart() : showCart = true">
   <i
     :class="[
       showCart
@@ -862,7 +868,7 @@
   </div>
     <button
     class="scroll-top-fab"
-    v-show="showScrollTop"
+    v-show="showScrollTop && activeMobilePanel !== 'cart'"
     :title="$t('common.scrollTop')"
     @click="scrollToTop"
   >
@@ -999,6 +1005,9 @@
 >
   <template v-if="addedMap[selectedItem.Ma_hang]">
     <i class="ri-checkbox-circle-fill"></i>
+  </template>
+  <template v-else-if="selectedItem.Trang_thai === 'Hết hàng'">
+    {{ $t('status.outOfStock') }}
   </template>
   <template v-else>
     {{ $t('menu.add') }}
@@ -1148,6 +1157,26 @@
   </button>
 </div>
 
+<!-- ===== MINI CART BAR (MOBILE) ===== -->
+<transition name="cart-bar-slide">
+  <div 
+    v-if="isMobile && cartItems.length > 0 && activeMobilePanel !== 'cart'" 
+    class="mobile-cart-bar"
+  >
+    <!-- PILL TRÁI: Icon giỏ hàng + badge số lượng -->
+    <div class="cart-bar-pill-left" @click="openMobilePanel('cart')">
+      <i class="ri-shopping-cart-2-fill cart-bar-icon"></i>
+      <span class="cart-bar-badge">{{ cartQtyTotal }}</span>
+    </div>
+
+    <!-- PILL PHẢI: Thanh toán + số tiền -->
+    <button class="cart-bar-pill-right" @click="openMobilePanel('cart')">
+      <span class="cart-bar-label">{{ $t('mobile.checkout') }}</span>
+      <span class="cart-bar-total">{{ formatPrice(totalAmount, cartItems[0]?.Don_vi_tien_te) }}</span>
+    </button>
+  </div>
+</transition>
+
 <div v-if="isMobile" class="mobile-bottom-bar">
   <!-- HOME -->
   <button
@@ -1232,7 +1261,15 @@
   >
     <div class="btn-inner">
       <div class="btn-scale">
-        <i class="ri-send-plane-fill"></i>
+        <div class="send-icon-wrap">
+          <i class="ri-send-plane-fill" :style="{ color: activeMobilePanel === 'export' ? '#ffffff' : '#16a34a' }"></i>
+          <span
+            v-if="cartItems.length"
+            class="send-badge"
+          >
+            {{ cartQtyTotal }}
+          </span>
+        </div>
         <span class="btn-label">{{ $t('mobile.send') }}</span>
       </div>
     </div>
@@ -2858,6 +2895,14 @@ function openMobilePanel(name) {
   showCart.value          = activeMobilePanel.value === 'cart'
   showExportModal.value   = activeMobilePanel.value === 'export'
 }
+
+function closeCart() {
+  showCart.value = false
+  if (isMobile.value) {
+    activeMobilePanel.value = null
+  }
+}
+
 function selectCategory(c) {
   currentCategory.value = c
   currentPage.value = 1
@@ -5981,10 +6026,11 @@ h3, h4, h5, p, span, div {
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: #ffffff;
 
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 0.3px;
-
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0px;
+  text-transform: uppercase;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(22,163,74,0.45);
 }
@@ -6608,7 +6654,7 @@ h3, h4, h5, p, span, div {
   }
   .scroll-top-fab {
     right: 14px !important; /* 🔥 sát mép phải */
-    bottom: 96px !important; /* 🔥 trên bottom bar 70px + khoảng cách */
+    bottom: 140px !important; /* 🔥 trên bottom bar 70px + cart bar 52px + khoảng cách */
     
     width: 48px; /* 🔥 to hơn tí cho dễ bấm */
     height: 48px;
@@ -7232,6 +7278,123 @@ h3, h4, h5, p, span, div {
   );
 }
 
+/* ================= MOBILE CART BAR ================= */
+.mobile-cart-bar {
+  position: fixed;
+  bottom: 78px;
+  left: 12px;
+  right: 12px;
+  
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  z-index: 1200;
+}
+
+/* PILL TRÁI: Icon + Badge */
+.cart-bar-pill-left {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 14px;
+  
+  box-shadow: 
+    0 4px 12px rgba(220, 38, 38, 0.4),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.cart-bar-pill-left:active {
+  transform: scale(0.94);
+}
+
+.cart-bar-icon {
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.cart-bar-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  
+  background: #ffffff;
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: 800;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  border-radius: 999px;
+  border: 2px solid #dc2626;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* PILL PHẢI: Thanh toán + số tiền */
+.cart-bar-pill-right {
+  flex: 1;
+  height: 48px;
+  padding: 0 16px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: none;
+  border-radius: 999px;
+  
+  box-shadow: 
+    0 4px 12px rgba(220, 38, 38, 0.4),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.cart-bar-pill-right:active {
+  transform: scale(0.98);
+}
+
+.cart-bar-label {
+  font-size: 15px;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cart-bar-total {
+  font-size: 17px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+/* Animation */
+.cart-bar-slide-enter-active,
+.cart-bar-slide-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cart-bar-slide-enter-from,
+.cart-bar-slide-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
 /* ================= MOBILE BOTTOM BAR – FINAL VIP ================= */
 
 .mobile-bottom-bar {
@@ -7397,6 +7560,38 @@ h3, h4, h5, p, span, div {
   30%  { transform: scale(1.35); }
   60%  { transform: scale(0.95); }
   100% { transform: scale(1); }
+}
+
+/* ===== SEND ICON + BADGE ===== */
+.mobile-bottom-bar .send-icon-wrap {
+  position: relative;
+}
+
+.mobile-bottom-bar .send-icon-wrap i {
+  color: inherit;
+}
+
+.send-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
   /* ===== MODAL CHI TIẾT MOBILE – NHỎ LẠI ===== */
 @media (max-width: 768px) {
@@ -8137,36 +8332,32 @@ h3, h4, h5, p, span, div {
   animation: pulseRing 0.9s ease-out infinite;
 }
 
-/* Soften dot when trong badge th?i gian m? c?a */
+/* Dot trong badge thời gian - giống như danh mục */
 .badge-online .dot-online {
-  animation: pulseSoft 1.6s ease-in-out infinite;
-  box-shadow:
-    0 0 0 3px rgba(34,197,94,0.24),
-    0 0 10px rgba(34,197,94,0.38),
-    0 0 18px rgba(34,197,94,0.28);
-  filter: none;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  position: relative;
+  animation: pulse 0.9s infinite;
 }
 
 .badge-online .dot-online::before {
-  inset: -3px;
-  opacity: 0.5;
-  animation: pulseGlowSoft 1.6s ease-in-out infinite;
+  display: none;
 }
 
 .badge-online .dot-online::after {
-  inset: -6px;
-  border: 2px solid rgba(34,197,94,0.35);
-  animation: pulseRingSoft 1.6s ease-out infinite;
+  display: none;
 }
 
 .badge-online:active .dot-online {
-  animation: pulseSoft 1.1s ease-in-out infinite;
-  transform: scale(1.05);
+  animation: pulse 0.7s infinite;
+  transform: scale(1.12);
 }
 
 .badge-online:active .dot-online::after {
-  animation: pulseRingSoft 1.1s ease-out infinite;
-  opacity: 0.5;
+  display: none;
 }
 .logo-time {
   transform: scale(0.95);
